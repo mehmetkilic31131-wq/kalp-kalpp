@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>❤️ Kalp</title>
+  <style>
+    :root {
+      --bg1: #ff1744;
+      --bg2: #d50000;
+      --bg3: #8d0033;
+    }
+
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, var(--bg1), var(--bg2), var(--bg3));
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .heart-container {
+      position: relative;
+      text-align: center;
+    }
+
+    svg {
+      width: 40vw;   /* ekranın %40 genişliği */
+      max-width: 250px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    svg:active {
+      transform: scale(1.2);
+    }
+
+    .message {
+      position: absolute;
+      top: -12vh;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 5vw;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 10px #000;
+      opacity: 0;
+      animation: fadeInOut 2s ease forwards;
+      white-space: nowrap;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translate(-50%, -30px); }
+      20% { opacity: 1; transform: translate(-50%, 0); }
+      80% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -30px); }
+    }
+
+    .big-message {
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10vw; /* ekrana göre yazı boyutu */
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 20px #000, 0 0 40px red;
+      opacity: 0;
+      animation: bigFade 1.5s ease forwards;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    @keyframes bigFade {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart-container">
+    <!-- 3D Kalp -->
+    <svg id="heart" viewBox="0 0 512 512">
+      <defs>
+        <linearGradient id="heartGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff5f6d"/>
+          <stop offset="50%" stop-color="#ff0000"/>
+          <stop offset="100%" stop-color="#7a0000"/>
+        </linearGradient>
+        <radialGradient id="shine" cx="30%" cy="30%" r="40%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+      </defs>
+
+      <path id="heartPath" d="M256 464
+        C176 384, 64 304, 64 192
+        C64 112, 128 64, 192 64
+        C224 64, 256 96, 256 128
+        C256 96, 288 64, 320 64
+        C384 64, 448 112, 448 192
+        C448 304, 336 384, 256 464
+        Z"
+        fill="url(#heartGradient)"
+        filter="drop-shadow(0 0 20px rgba(255,0,0,0.7)) drop-shadow(0 0 40px rgba(255,0,0,0.9))"/>
+      <ellipse cx="200" cy="150" rx="110" ry="60" fill="url(#shine)"/>
+    </svg>
+
+    <!-- Küçük mesaj -->
+    <div id="message" class="message"></div>
+  </div>
+
+  <!-- Büyük mesaj -->
+  <div id="bigMessage" class="big-message"></div>
+
+  <script>
+    const heart = document.getElementById("heart");
+    const message = document.getElementById("message");
+    const bigMessage = document.getElementById("bigMessage");
+
+    // Küçük yazılar
+    const messages = [
+      "Seni Seviyorum ❤️","Sana Aşığım 💕","Benimle Çıkar mısın? 💘",
+      "Canım Sevgilim 💖","Aşkım 💞","Birtanem 💓","Yavrum 😍",
+      "Sevdiğim 💕","Hayatım 💝","Kalbim Seninle 💗",
+      "Sen Benim Her Şeyimsin 🌹","Ruh Eşim 💍","Can Parçam 🥰","Meleğim 😇"
+    ];
+
+    // Büyük yazılar
+    const bigMessages = [
+      "SANA AŞIĞIM ❤️","BENİMLE OL 💘","SEVGİLİM 💖","AŞKIM 💞",
+      "HAYATIM SENİNLE 🌹","RUH EŞİM 💍","SONSUZA KADAR 💫",
+      "KALBİM SADECE SENİN 💗","CANIM SEVGİLİM 🥰","SENİNLE MUTLUYUM 😍",
+      "BİTANEMSİN 💕","MELEĞİM 😇","HER ŞEYİM OLDUN 🌸"
+    ];
+
+    let msgIndex = 0;
+    let bigIndex = 0;
+
+    // Küçük yazılar (her tıklamada)
+    heart.addEventListener("click", () => {
+      message.textContent = messages[msgIndex];
+      message.style.animation = "none";
+      void message.offsetWidth; 
+      message.style.animation = "fadeInOut 2s ease forwards";
+      msgIndex = (msgIndex + 1) % messages.length;
+    });
+
+    // Büyük yazılar (3 saniyede bir otomatik)
+    setInterval(() => {
+      bigMessage.textContent = bigMessages[bigIndex];
+      bigMessage.style.animation = "none";
+      void bigMessage.offsetWidth;
+      bigMessage.style.animation = "bigFade 1.5s ease forwards";
+      bigIndex = (bigIndex + 1) % bigMessages.length;
+    }, 3000);
+  </script>
+</body>
+</html>
